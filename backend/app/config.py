@@ -11,6 +11,11 @@ class Settings(BaseSettings):
     RETRIEVAL_K: int = 5
     MAX_UPLOAD_MB: int = 20
     LEGAL_INDEX_PATH: str = "indexes/legal"
+    ALLOWED_ORIGINS: str = "http://localhost:3000"
+
+    @property
+    def allowed_origins_list(self) -> list[str]:
+        return [origin.strip() for origin in self.ALLOWED_ORIGINS.split(",")]
 
     class Config:
         env_file = ".env"

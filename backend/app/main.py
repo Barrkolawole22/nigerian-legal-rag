@@ -14,11 +14,15 @@ async def lifespan(app: FastAPI):
     yield
 
 
+from app.config import get_settings
+
+settings = get_settings()
+
 app = FastAPI(title="RAG Portfolio API", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=settings.allowed_origins_list,
     allow_methods=["*"],
     allow_headers=["*"],
 )

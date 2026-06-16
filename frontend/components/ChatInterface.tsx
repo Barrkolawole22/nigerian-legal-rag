@@ -11,6 +11,7 @@ import {
   Scale,
 } from "lucide-react";
 import Link from "next/link";
+import ReactMarkdown from "react-markdown";
 import { uploadDocument, sendMessage, ChatMode } from "@/lib/api";
 
 interface Message {
@@ -244,13 +245,46 @@ export default function ChatInterface({
             >
               <div className="max-w-[82%]">
                 <div
-                  className={`rounded-xl px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap ${
+                  className={`rounded-xl px-4 py-3 text-sm leading-relaxed ${
                     msg.role === "user"
-                      ? "bg-gray-800 text-white"
+                      ? "bg-gray-800 text-white whitespace-pre-wrap"
                       : "bg-gray-900 text-gray-100 border border-gray-800/80"
                   }`}
                 >
-                  {msg.content}
+                  {msg.role === "assistant" ? (
+                    <ReactMarkdown
+                      components={{
+                        p: ({ children }) => (
+                          <p className="mb-2 last:mb-0">{children}</p>
+                        ),
+                        strong: ({ children }) => (
+                          <strong className="font-semibold text-white">
+                            {children}
+                          </strong>
+                        ),
+                        ul: ({ children }) => (
+                          <ul className="list-disc pl-5 mb-2 space-y-1">
+                            {children}
+                          </ul>
+                        ),
+                        ol: ({ children }) => (
+                          <ol className="list-decimal pl-5 mb-2 space-y-1">
+                            {children}
+                          </ol>
+                        ),
+                        li: ({ children }) => <li>{children}</li>,
+                        code: ({ children }) => (
+                          <code className="bg-gray-800 rounded px-1 py-0.5 text-xs">
+                            {children}
+                          </code>
+                        ),
+                      }}
+                    >
+                      {msg.content}
+                    </ReactMarkdown>
+                  ) : (
+                    msg.content
+                  )}
                 </div>
                 {msg.sources && msg.sources.length > 0 && (
                   <div className="flex flex-wrap gap-1.5 mt-2">
